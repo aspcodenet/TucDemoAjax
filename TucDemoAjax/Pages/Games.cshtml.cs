@@ -31,6 +31,15 @@ namespace TucDemoAjax.Pages
             public DateTime Date { get; set; }
         }
 
+        public IActionResult OnGetSpectators(int id)
+        {
+            var game = _dbContext.Games.First(g => g.Id == id);
+            return new JsonResult(new
+            {
+                spectators = game.Spectators
+            });
+        }
+
         public IActionResult OnGetFetch10Games(long lastTicks)
         {
             DateTime dateOfLastShown = new DateTime(lastTicks);

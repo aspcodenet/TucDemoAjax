@@ -45,8 +45,18 @@
         <td>${element.datum}</td>
         <td>${element.hometeam} - ${element.awayteam}</td>
         <td>${element.homeScores} - ${element.awayScores}</td>
+        <td onclick="fetchSpectators(${element.id})">View spectators</td>
     </tr>`;
     }
+    function fetchSpectators(id) {
+        fetch("/Games?handler=spectators&id=" + id)
+            .then((response) => response.json())
+            .then((json) => {
+                    alert(json.spectators);
+                }
+            );
+    }
+
     function fetchMore() {
         fetch("/Games?handler=games")
             .then((response) => response.json())
