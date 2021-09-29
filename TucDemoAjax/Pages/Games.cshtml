@@ -4,25 +4,64 @@
 }
 
 
-<table class="table">
+<table id="posts-table" class="table">
     <thead>
-        <tr>
-            <th scope="col">Date</th>
-            <th scope="col">Teams</th>
-            <th scope="col">Result</th>
-        </tr>
+    <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Teams</th>
+        <th scope="col">Result</th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.GameListItems)
-        {
-
-            <tr>
-                <td>@item.Datum</td>
-                <td>@item.Hometeam - @item.Awayteam</td>
-                <td>@item.HomeScores - @item.AwayScores</td>
-            </tr>
-        }
+    
     </tbody>
 </table>
+
+<button type="button" onclick="fetch10games()">Hämta 10 matcher till</button>
+
+
+
+<button type="button" onclick="fetchMore()">Hämta en spelare</button>
+
+<h3>@DateTime.Now.ToString()</h3>
+
+<h2 id="playerName"></h2>
+<h4 id="playerJersey"></h4>
+
+<script>
+    lastTicks = 0;
+    function fetch10games() {
+        fetch("/Games?handler=fetch10games&lastTicks=" + lastTicks)
+            .then((response) => response.json())
+            .then((json) => {
+                    lastTicks = json.lastTicks;
+                    json.items.forEach(tableElements);
+                }
+            );
+    }
+    function tableElements(element, index, arr) {
+        document.querySelector('#posts-table tbody').innerHTML +=
+            `<tr>
+        <td>${element.datum}</td>
+        <td>${element.hometeam} - ${element.awayteam}</td>
+        <td>${element.homeScores} - ${element.awayScores}</td>
+    </tr>`;
+    }
+    function fetchMore() {
+        fetch("/Games?handler=games")
+            .then((response) => response.json())
+            .then((json) => {
+                    $('#playerName').text(json.namn);
+                    $('#playerJersey').text(json.jersey);
+                }
+            );
+        
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch10games();
+    });
+
+</script>
 
 
